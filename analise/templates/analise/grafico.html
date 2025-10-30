@@ -1,0 +1,11 @@
+{% extends "analise/base.html" %}
+
+{% block title %}Gráfico dos comentários{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mb-4">Gráfico de Sentimentos</h2>
+        <img src="data:image/png;base64,{{ grafico }}" class="img-fluid"/>
+        <p><a href="{% url 'historico' %}" class="btn btn-success mt-3">Voltar ao Histórico</a></p>
+    </div>
+{% endblock %}

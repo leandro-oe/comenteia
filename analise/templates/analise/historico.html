@@ -1,0 +1,107 @@
+{% extends "analise/base.html" %}
+
+{% block title %}Histórico de Comentários{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded-3">
+            <div class="card-header bg-light text-black text-center">
+                <h3 class="mb-0">📜 Histórico de Comentários Analisados</h3>
+            </div>
+            
+            <div class="card-body p-4">
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Comentário</th>
+                                <th>Sentimento</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in comentarios %}
+                            <tr>
+                                <td>{{ c.texto }}</td>
+                                <td>
+                                    {% if c.sentimento|lower == "positivo" %}
+                                        <span class="badge bg-success">😊 Positivo</span>
+                                    {% elif c.sentimento|lower == "negativo" %}
+                                        <span class="badge bg-danger">☹️ Negativo</span>
+                                    {% elif c.sentimento|lower == "neutro" or c.sentimento|lower == "neutral" %}
+                                        <span class="badge bg-secondary">😐 Neutro</span>
+                                    {% else %}
+                                        <span class="badge bg-dark">{{ c.sentimento }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ c.data|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'editar_comentario' c.id %}" class="btn btn-sm btn-success">✏️ Editar</a>
+                                    <a href="{% url 'deletar_comentario' c.id %}" class="btn btn-sm btn-danger">🗑️ Deletar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Nenhum comentário analisado ainda.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <!-- Paginação -->
+                        <nav aria-label="Navegação de páginas">
+                            <ul class="pagination pagination-success justify-content-center">
+                                {% if comentarios.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ comentarios.previous_page_number }}">Anterior</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Anterior</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for num in comentarios.paginator.page_range %}
+                                    {% if comentarios.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if comentarios.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ comentarios.next_page_number }}">Próxima</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Próxima</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'analisar' %}" class="btn btn-primary">
+                        🔍 Análisar comentário
+                    </a>
+                    <a href="{% url 'grafico' %}" class="btn btn-success">
+                        🔍 Ver gráfico
+                    </a>
+                </div>
+               
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "analise/base.html" %}
+
+{% block title %}Analisar Comentário{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0">Analisar Comentário</h3>
+        </div>
+        
+
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.texto.label_tag }}
+                    {{ form.texto }}
+                    {% if form.texto.errors %}
+                        <div class="text-danger small">{{ form.texto.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-success">Analisar</button>
+                <a href="{% url 'historico' %}" class="btn btn-secondary">Histórico</a>
+            </form>
+            {% if resultado %}
+                <div class="alert mt-3 
+                    {% if resultado == 'Positivo' %}alert-success
+                    {% elif resultado == 'Negativo' %}alert-danger
+                    {% else %}alert-secondary{% endif %}">
+                    Resultado: <strong>{{ resultado }}</strong>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
